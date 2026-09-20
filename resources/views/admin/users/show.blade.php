@@ -3,7 +3,7 @@
         <x-page-header :title="$user->name" :breadcrumbs="[
             ['label' => 'Dashboard', 'url' => route('dashboard')],
             ['label' => 'Pentadbiran'],
-            ['label' => 'Pengguna & Akaun', 'url' => route('admin.users.index')],
+            ['label' => 'Pengguna', 'url' => route('admin.users.index')],
             ['label' => $user->name],
         ]">
             <x-slot:actions>

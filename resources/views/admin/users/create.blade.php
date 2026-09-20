@@ -3,7 +3,7 @@
         <x-page-header title="Tambah pengguna" :breadcrumbs="[
             ['label' => 'Dashboard', 'url' => route('dashboard')],
             ['label' => 'Pentadbiran'],
-            ['label' => 'Pengguna & Akaun', 'url' => route('admin.users.index')],
+            ['label' => 'Pengguna', 'url' => route('admin.users.index')],
             ['label' => 'Tambah'],
         ]" />
     </x-slot:header>

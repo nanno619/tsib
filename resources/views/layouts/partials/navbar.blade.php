@@ -101,7 +101,7 @@
                                     <x-dropdown-item href="#" icon="currency-dollar">Payslip</x-dropdown-item>
                                     <x-dropdown-item href="#" icon="clock">Schedule</x-dropdown-item>
                                 </x-dropdown>
-                                <x-dropdown as="li" trigger-class="nav-link" auto-close="outside" class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                                <x-dropdown as="li" trigger-class="nav-link" auto-close="outside" class="nav-item {{ request()->routeIs('admin.roles.*') || request()->routeIs('admin.users.*') ? 'active' : '' }}">
                                     <x-slot:trigger>
                                         <span class="nav-link-icon"><x-icon name="settings" /></span>
                                         <span class="nav-link-title">Pentadbiran</span>
@@ -109,9 +109,11 @@
 
                                     {{-- Policy-driven navigation: only rendered for
                                          users the UserPolicy lets into the admin
-                                         area at all. --}}
+                                         area at all. Two separate destinations,
+                                         both gated by the same ability. --}}
                                     @can('viewAny', App\Models\User::class)
-                                        <x-dropdown-item href="{{ route('admin.users.index') }}" icon="shield" :active="request()->routeIs('admin.users.*')">Pengguna & Akaun</x-dropdown-item>
+                                        <x-dropdown-item href="{{ route('admin.users.index') }}" icon="user" :active="request()->routeIs('admin.users.*')">Pengguna</x-dropdown-item>
+                                        <x-dropdown-item href="{{ route('admin.roles.index') }}" icon="shield" :active="request()->routeIs('admin.roles.*')">Access Control</x-dropdown-item>
                                     @endcan
                                     <x-dropdown-item href="#" icon="bell">Announcement</x-dropdown-item>
                                     <x-dropdown-item href="#" icon="history">Audit Trail</x-dropdown-item>

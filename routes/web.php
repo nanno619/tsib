@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ExportUsersPdfController;
 use App\Http\Controllers\Settings\UpdateAvatarController;
@@ -36,6 +37,12 @@ Route::middleware('auth')->group(function () {
     // #[Authorize] attributes on the controller, which resolve against
     // App\Policies\UserPolicy. A failing check throws 403, rendered by
     // resources/views/errors/403.blade.php.
+    //
+    // Access Control: read-only role overview + per-role user list, a
+    // separate nav item from Pengguna (/admin/users below).
+    Route::get('/admin/roles', [RoleController::class, 'index'])->name('admin.roles.index');
+    Route::get('/admin/roles/{role}', [RoleController::class, 'show'])->name('admin.roles.show');
+
     Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');
 
     // These have to precede /admin/users/{user}: registered after it, "create"

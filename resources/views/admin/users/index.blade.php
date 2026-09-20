@@ -6,16 +6,17 @@
     would get a 403 anyway. A hidden button is *not* the security boundary: the
     policy on the route is. This just avoids offering an action that can't work.
 --}}
-<x-layouts.app title="Pengguna & Akaun">
+<x-layouts.app title="Pengguna">
     <x-slot:header>
-        <x-page-header title="Pengguna & Akaun" :breadcrumbs="[
+        <x-page-header title="Pengguna" :breadcrumbs="[
             ['label' => 'Dashboard', 'url' => route('dashboard')],
             ['label' => 'Pentadbiran'],
-            ['label' => 'Pengguna & Akaun'],
+            ['label' => 'Pengguna'],
         ]">
             <x-slot:actions>
-                {{-- Gated by the same policy the route enforces, so an editor
-                     isn't offered a button that would 403 anyway. --}}
+                {{-- Gated by the same policy the route enforces, so a user
+                     without permission isn't offered a button that would
+                     403 anyway. --}}
                 @can('create', App\Models\User::class)
                     <x-button href="{{ route('admin.users.create') }}" color="primary" icon="user-plus">Tambah pengguna</x-button>
                 @endcan
