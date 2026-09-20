@@ -10,6 +10,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
+use Illuminate\Support\Facades\Password;
 use Spatie\Permission\Models\Role;
 
 /**
@@ -52,10 +53,10 @@ class UserController extends Controller
             'filters' => $filters,
             'sort' => $sort,
             'sortOptions' => [
-                'name' => 'Name (A–Z)',
-                'name_desc' => 'Name (Z–A)',
-                'newest' => 'Newest first',
-                'oldest' => 'Oldest first',
+                'name' => 'Nama (A–Z)',
+                'name_desc' => 'Nama (Z–A)',
+                'newest' => 'Terbaharu dahulu',
+                'oldest' => 'Terlama dahulu',
             ],
             // array_filter drops the empty ones, so this counts how many are
             // actually narrowing the list. Sort is deliberately not counted —
@@ -184,5 +185,16 @@ class UserController extends Controller
         $user->delete();
 
         return back()->with('status', 'user-deleted');
+    }
+
+    #[Authorize('update', 'user')]
+    public function sendPasswordReset(User $user): RedirectResponse
+    {
+        $status = Password::sendResetLink(['email' => $user->email]);
+
+        return back()->with(
+            'status',
+            $status === Password::RESET_LINK_SENT ? 'user-password-reset-sent' : 'user-password-reset-failed',
+        );
     }
 }

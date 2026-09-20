@@ -6,30 +6,30 @@
     would get a 403 anyway. A hidden button is *not* the security boundary: the
     policy on the route is. This just avoids offering an action that can't work.
 --}}
-<x-layouts.app title="Users">
+<x-layouts.app title="Pengguna & Akaun">
     <x-slot:header>
-        <x-page-header title="Users" :breadcrumbs="[
+        <x-page-header title="Pengguna & Akaun" :breadcrumbs="[
             ['label' => 'Dashboard', 'url' => route('dashboard')],
-            ['label' => 'Admin'],
-            ['label' => 'Users'],
+            ['label' => 'Pentadbiran'],
+            ['label' => 'Pengguna & Akaun'],
         ]">
             <x-slot:actions>
                 {{-- Gated by the same policy the route enforces, so an editor
                      isn't offered a button that would 403 anyway. --}}
                 @can('create', App\Models\User::class)
-                    <x-button href="{{ route('admin.users.create') }}" color="primary" icon="user-plus">Add user</x-button>
+                    <x-button href="{{ route('admin.users.create') }}" color="primary" icon="user-plus">Tambah pengguna</x-button>
                 @endcan
             </x-slot:actions>
         </x-page-header>
     </x-slot:header>
 
     @if (session('status') === 'user-deleted')
-        <x-alert type="success" class="mb-3">The user has been deleted.</x-alert>
+        <x-alert type="success" class="mb-3">Pengguna telah dipadam.</x-alert>
     @endif
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">All users</h3>
+            <h3 class="card-title">Semua pengguna</h3>
 
             {{-- Tinted whenever a filter is narrowing the list, so the panel
                  isn't invisible state. The label carries the count for screen
@@ -40,8 +40,8 @@
                 :variant="$activeFilterCount ? null : 'ghost'"
                 icon="search"
                 :label="$activeFilterCount
-                    ? 'Filter users ('.$activeFilterCount.' active)'
-                    : 'Filter users'"
+                    ? 'Tapis pengguna ('.$activeFilterCount.' aktif)'
+                    : 'Tapis pengguna'"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#users-filter"
                 aria-controls="users-filter"
@@ -51,13 +51,13 @@
         @if ($users->isEmpty())
             <div class="card-body">
                 @if ($activeFilterCount)
-                    <x-empty icon="search" title="No matching users" subtitle="Nothing matches those filters — try widening them.">
+                    <x-empty icon="search" title="Tiada pengguna sepadan" subtitle="Tiada padanan bagi penapis tersebut — cuba luaskan carian.">
                         <x-slot:actions>
-                            <x-button href="{{ route('admin.users.index') }}">Reset filters</x-button>
+                            <x-button href="{{ route('admin.users.index') }}">Set semula penapis</x-button>
                         </x-slot:actions>
                     </x-empty>
                 @else
-                    <x-empty icon="user" title="No users yet" subtitle="New accounts will appear here." />
+                    <x-empty icon="user" title="Belum ada pengguna" subtitle="Akaun baharu akan dipaparkan di sini." />
                 @endif
             </div>
         @else
@@ -67,10 +67,10 @@
                         {{-- Actions first. The heading is empty visually but
                              labelled for screen readers, which would otherwise
                              announce a column with no name. --}}
-                        <th class="w-1"><span class="visually-hidden">Actions</span></th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Roles</th>
+                        <th class="w-1"><span class="visually-hidden">Tindakan</span></th>
+                        <th>Nama</th>
+                        <th>E-mel</th>
+                        <th>Peranan</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -91,15 +91,15 @@
                                      tooltip is showing. --}}
                                 <div class="d-flex gap-2">
                                     <a href="{{ route('admin.users.show', $user) }}" class="action-icon"
-                                       aria-label="View {{ $user->name }}"
-                                       data-bs-toggle="tooltip" data-bs-placement="top" title="View">
+                                       aria-label="Lihat {{ $user->name }}"
+                                       data-bs-toggle="tooltip" data-bs-placement="top" title="Lihat">
                                         <x-icon name="eye" />
                                     </a>
 
                                     @can('update', $user)
                                         <a href="{{ route('admin.users.edit', $user) }}" class="action-icon"
-                                           aria-label="Edit {{ $user->name }}"
-                                           data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
+                                           aria-label="Sunting {{ $user->name }}"
+                                           data-bs-toggle="tooltip" data-bs-placement="top" title="Sunting">
                                             <x-icon name="pencil" />
                                         </a>
                                     @endcan
@@ -116,15 +116,15 @@
                                         <form method="POST" action="{{ route('admin.users.destroy', $user) }}"
                                               novalidate
                                               data-confirm-delete
-                                              data-confirm-title="Delete user"
-                                              data-confirm-message="{{ $user->name }} ({{ $user->email }}) will be removed from the user list."
-                                              onsubmit="return confirm('Delete this user?')">
+                                              data-confirm-title="Padam pengguna"
+                                              data-confirm-message="{{ $user->name }} ({{ $user->email }}) akan dikeluarkan daripada senarai pengguna."
+                                              onsubmit="return confirm('Padam pengguna ini?')">
                                             @csrf
                                             @method('DELETE')
 
                                             <button type="submit" class="action-icon action-icon-danger"
-                                                    aria-label="Delete {{ $user->name }}"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">
+                                                    aria-label="Padam {{ $user->name }}"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Padam">
                                                 <x-icon name="trash" />
                                             </button>
                                         </form>
@@ -158,7 +158,7 @@
 
             <div class="card-footer d-flex align-items-center">
                 <p class="m-0 text-secondary">
-                    Showing <span>{{ $users->firstItem() }}</span> to <span>{{ $users->lastItem() }}</span> of <span>{{ $users->total() }}</span> entries
+                    Memaparkan <span>{{ $users->firstItem() }}</span> hingga <span>{{ $users->lastItem() }}</span> daripada <span>{{ $users->total() }}</span> entri
                 </p>
                 <x-pagination :paginator="$users" class="m-0 ms-auto" />
             </div>
@@ -171,10 +171,10 @@
          A plain GET form, so the filters end up in the URL: the result is
          shareable, the back button works, and the paginator's
          withQueryString() carries them onto every page link. --}}
-    <x-offcanvas id="users-filter" title="Filter users">
+    <x-offcanvas id="users-filter" title="Tapis pengguna">
         <form method="GET" action="{{ route('admin.users.index') }}" id="users-filter-form" novalidate>
-            <x-input name="name" label="Name" :value="$filters['name']"
-                     placeholder="Search by name…" icon="search" />
+            <x-input name="name" label="Nama" :value="$filters['name']"
+                     placeholder="Cari mengikut nama…" icon="search" />
 
             {{-- Tom Select needs no special handling in a drawer:
                  resources/js/select.js sets dropdownParent: 'body', so the menu
@@ -182,10 +182,10 @@
                  being clipped by .offcanvas-body's overflow. --}}
             <x-select
                 name="roles"
-                label="Roles"
+                label="Peranan"
                 advanced
                 multiple
-                placeholder="Any role"
+                placeholder="Mana-mana peranan"
                 :options="$allRoles"
                 :value="$filters['roles']"
             />
@@ -193,15 +193,15 @@
             {{-- Plain, not `advanced`: four fixed options don't need search or
                  custom rendering, and the native control is keyboard- and
                  screen-reader-native for free. --}}
-            <x-select name="sort" label="Sort by" :value="$sort" :options="$sortOptions" class="mb-0" />
+            <x-select name="sort" label="Susun mengikut" :value="$sort" :options="$sortOptions" class="mb-0" />
         </form>
 
         <x-slot:footer>
             <div class="btn-list justify-content-end">
-                <x-button href="{{ route('admin.users.index') }}">Reset</x-button>
+                <x-button href="{{ route('admin.users.index') }}">Set semula</x-button>
                 {{-- The footer sits outside the body, so this points back at the
                      form by id rather than nesting inside it. --}}
-                <x-button type="submit" form="users-filter-form" color="primary" icon="check">Apply</x-button>
+                <x-button type="submit" form="users-filter-form" color="primary" icon="check">Guna pakai</x-button>
             </div>
         </x-slot:footer>
     </x-offcanvas>

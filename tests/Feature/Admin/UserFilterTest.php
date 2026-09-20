@@ -109,8 +109,8 @@ class UserFilterTest extends TestCase
 
         $this->actingAs($this->admin())->get('/admin/users?name=nobody-matches-this')
             ->assertOk()
-            ->assertSee('No matching users')
-            ->assertSee('Reset filters');
+            ->assertSee('Tiada pengguna sepadan')
+            ->assertSee('Set semula penapis');
     }
 
     public function test_it_sorts(): void
@@ -143,7 +143,7 @@ class UserFilterTest extends TestCase
         $this->actingAs($this->admin())
             ->get('/admin/users?sort=password')
             ->assertOk()
-            ->assertSee('All users');
+            ->assertSee('Semua pengguna');
     }
 
     public function test_the_filter_count_is_announced_on_the_button(): void
@@ -156,7 +156,7 @@ class UserFilterTest extends TestCase
         $this->assertIsString($plain);
         $this->assertIsString($filtered);
 
-        $this->assertStringContainsString('aria-label="Filter users"', $plain);
-        $this->assertStringContainsString('aria-label="Filter users (2 active)"', $filtered);
+        $this->assertStringContainsString('aria-label="Tapis pengguna"', $plain);
+        $this->assertStringContainsString('aria-label="Tapis pengguna (2 aktif)"', $filtered);
     }
 }

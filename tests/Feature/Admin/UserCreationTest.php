@@ -54,7 +54,7 @@ class UserCreationTest extends TestCase
         $response = $this->actingAs($this->userWithRole('admin'))->get('/admin/users/create');
 
         $response->assertOk();
-        $response->assertSee('Add user');
+        $response->assertSee('Tambah pengguna');
     }
 
     public function test_the_create_url_is_not_mistaken_for_a_user_id(): void

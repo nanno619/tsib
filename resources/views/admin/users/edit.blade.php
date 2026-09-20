@@ -1,11 +1,11 @@
-<x-layouts.app title="Edit {{ $user->name }}">
+<x-layouts.app title="Sunting {{ $user->name }}">
     <x-slot:header>
-        <x-page-header title="Edit user" :breadcrumbs="[
+        <x-page-header title="Sunting pengguna" :breadcrumbs="[
             ['label' => 'Dashboard', 'url' => route('dashboard')],
-            ['label' => 'Admin'],
-            ['label' => 'Users', 'url' => route('admin.users.index')],
+            ['label' => 'Pentadbiran'],
+            ['label' => 'Pengguna & Akaun', 'url' => route('admin.users.index')],
             ['label' => $user->name, 'url' => route('admin.users.show', $user)],
-            ['label' => 'Edit'],
+            ['label' => 'Sunting'],
         ]" />
     </x-slot:header>
 
@@ -18,8 +18,8 @@
             @method('PUT')
 
             <div class="card-body">
-                <x-input name="name" label="Name" :value="$user->name" autocomplete="name" required />
-                <x-input type="email" name="email" label="Email address" :value="$user->email" autocomplete="email" required />
+                <x-input name="name" label="Nama" :value="$user->name" autocomplete="name" required />
+                <x-input type="email" name="email" label="Alamat e-mel" :value="$user->email" autocomplete="email" required />
 
                 @if ($user->is(auth()->user()))
                     {{-- Same reasoning as the policy's self-delete guard:
@@ -28,15 +28,15 @@
                          out. The controller ignores roles for self too —
                          this only explains why the field is absent. --}}
                     <x-alert type="info" class="mb-0">
-                        You cannot change your own roles. Ask another admin to do it.
+                        Anda tidak boleh menukar peranan anda sendiri. Minta pentadbir lain melakukannya.
                     </x-alert>
                 @else
                     <x-select
                         name="roles"
-                        label="Roles"
+                        label="Peranan"
                         multiple
                         advanced
-                        placeholder="Add a role…"
+                        placeholder="Tambah peranan…"
                         :options="$allRoles"
                         :value="$user->getRoleNames()->all()"
                         class="mb-0"
@@ -46,8 +46,8 @@
 
             <div class="card-footer bg-transparent mt-auto">
                 <div class="btn-list justify-content-end">
-                    <x-button href="{{ route('admin.users.show', $user) }}">Cancel</x-button>
-                    <x-button type="submit" color="primary" icon="device-floppy">Save changes</x-button>
+                    <x-button href="{{ route('admin.users.show', $user) }}">Batal</x-button>
+                    <x-button type="submit" color="primary" icon="device-floppy">Simpan perubahan</x-button>
                 </div>
             </div>
         </form>

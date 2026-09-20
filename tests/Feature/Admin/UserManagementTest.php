@@ -44,7 +44,7 @@ class UserManagementTest extends TestCase
         $response = $this->actingAs($admin)->get('/admin/users');
 
         $response->assertOk();
-        $response->assertSee('All users');
+        $response->assertSee('Semua pengguna');
         $response->assertSee('Ada Lovelace');
         $response->assertSee($target->email);
     }
@@ -69,8 +69,8 @@ class UserManagementTest extends TestCase
         // Match the button's accessible name, not the URL: show and destroy
         // share a path and differ only by verb, so a URL assertion can't tell
         // the two apart.
-        $this->assertStringContainsString('aria-label="Delete Deletable Person"', $html);
-        $this->assertStringNotContainsString('aria-label="Delete '.$admin->name.'"', $html);
+        $this->assertStringContainsString('aria-label="Padam Deletable Person"', $html);
+        $this->assertStringNotContainsString('aria-label="Padam '.$admin->name.'"', $html);
     }
 
     public function test_an_editor_can_look_but_gets_no_delete_controls(): void
@@ -86,11 +86,11 @@ class UserManagementTest extends TestCase
         $this->assertIsString($html);
 
         // An editor may browse, but neither delete nor edit.
-        $this->assertStringNotContainsString('aria-label="Delete '.$other->name.'"', $html);
-        $this->assertStringNotContainsString('aria-label="Edit '.$other->name.'"', $html);
+        $this->assertStringNotContainsString('aria-label="Padam '.$other->name.'"', $html);
+        $this->assertStringNotContainsString('aria-label="Sunting '.$other->name.'"', $html);
         // Viewing is allowed, so this is what proves the assertions above are
         // looking at something real rather than an empty page.
-        $this->assertStringContainsString('aria-label="View '.$other->name.'"', $html);
+        $this->assertStringContainsString('aria-label="Lihat '.$other->name.'"', $html);
     }
 
     public function test_a_user_without_permission_is_forbidden(): void
@@ -157,7 +157,7 @@ class UserManagementTest extends TestCase
         // markup happens to be wrapped.
         $flat = (string) preg_replace('/\s+/', ' ', $html);
 
-        foreach (['View', 'Edit', 'Delete'] as $action) {
+        foreach (['Lihat', 'Sunting', 'Padam'] as $action) {
             $this->assertStringContainsString(
                 'data-bs-toggle="tooltip" data-bs-placement="top" title="'.$action.'"',
                 $flat,
@@ -186,7 +186,7 @@ class UserManagementTest extends TestCase
         // And the page the redirect lands on renders it.
         $this->actingAs($admin)->get('/admin/users')
             ->assertOk()
-            ->assertSee('The user has been deleted.');
+            ->assertSee('Pengguna telah dipadam.');
     }
 
     public function test_delete_forms_carry_the_attributes_the_js_reads(): void
@@ -254,5 +254,6 @@ class UserManagementTest extends TestCase
 
         $this->assertStringContainsString($url, $adminHtml);
         $this->assertStringNotContainsString($url, $plainHtml);
+        $this->assertStringContainsString('Pengguna & Akaun', $adminHtml);
     }
 }

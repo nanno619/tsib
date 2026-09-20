@@ -68,7 +68,7 @@ class UserEditingTest extends TestCase
         $response = $this->actingAs($admin)->get(route('admin.users.edit', $target));
 
         $response->assertOk();
-        $response->assertSee('Edit user');
+        $response->assertSee('Sunting pengguna');
     }
 
     public function test_an_editor_cannot_open_the_edit_form(): void
@@ -97,7 +97,7 @@ class UserEditingTest extends TestCase
         $response = $this->actingAs($admin)->get(route('admin.users.edit', $admin));
 
         $response->assertOk();
-        $response->assertSee('You cannot change your own roles');
+        $response->assertSee('Anda tidak boleh menukar peranan anda sendiri');
         $response->assertDontSee('name="roles[]"', escape: false);
     }
 

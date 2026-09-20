@@ -1,10 +1,10 @@
-<x-layouts.app title="Add user">
+<x-layouts.app title="Tambah pengguna">
     <x-slot:header>
-        <x-page-header title="Add user" :breadcrumbs="[
+        <x-page-header title="Tambah pengguna" :breadcrumbs="[
             ['label' => 'Dashboard', 'url' => route('dashboard')],
-            ['label' => 'Admin'],
-            ['label' => 'Users', 'url' => route('admin.users.index')],
-            ['label' => 'Add'],
+            ['label' => 'Pentadbiran'],
+            ['label' => 'Pengguna & Akaun', 'url' => route('admin.users.index')],
+            ['label' => 'Tambah'],
         ]" />
     </x-slot:header>
 
@@ -16,22 +16,22 @@
             @csrf
 
             <div class="card-body">
-                <x-input name="name" label="Name" autocomplete="name" required autofocus />
-                <x-input type="email" name="email" label="Email address" autocomplete="email" required />
+                <x-input name="name" label="Nama" autocomplete="name" required autofocus />
+                <x-input type="email" name="email" label="Alamat e-mel" autocomplete="email" required />
 
                 {{-- Same rules as registration — see StoreUserRequest,
                      which reuses Fortify's PasswordValidationRules. --}}
-                <x-input type="password" name="password" label="Password"
-                         autocomplete="new-password" required help="At least 8 characters." />
-                <x-input type="password" name="password_confirmation" label="Confirm password"
+                <x-input type="password" name="password" label="Kata laluan"
+                         autocomplete="new-password" required help="Sekurang-kurangnya 8 aksara." />
+                <x-input type="password" name="password_confirmation" label="Sahkan kata laluan"
                          autocomplete="new-password" required />
 
                 <x-select
                     name="roles"
-                    label="Roles"
+                    label="Peranan"
                     advanced
                     multiple
-                    placeholder="Add a role…"
+                    placeholder="Tambah peranan…"
                     :options="$allRoles"
                     class="mb-0"
                 />
@@ -39,8 +39,8 @@
 
             <div class="card-footer bg-transparent mt-auto">
                 <div class="btn-list justify-content-end">
-                    <x-button href="{{ route('admin.users.index') }}">Cancel</x-button>
-                    <x-button type="submit" color="primary" icon="user-plus">Create user</x-button>
+                    <x-button href="{{ route('admin.users.index') }}">Batal</x-button>
+                    <x-button type="submit" color="primary" icon="user-plus">Cipta pengguna</x-button>
                 </div>
             </div>
         </form>

@@ -104,10 +104,15 @@
                                 <x-dropdown as="li" trigger-class="nav-link" auto-close="outside" class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                                     <x-slot:trigger>
                                         <span class="nav-link-icon"><x-icon name="settings" /></span>
-                                        <span class="nav-link-title">Administrations</span>
+                                        <span class="nav-link-title">Pentadbiran</span>
                                     </x-slot:trigger>
 
-                                    <x-dropdown-item href="#" icon="shield">Access Control</x-dropdown-item>
+                                    {{-- Policy-driven navigation: only rendered for
+                                         users the UserPolicy lets into the admin
+                                         area at all. --}}
+                                    @can('viewAny', App\Models\User::class)
+                                        <x-dropdown-item href="{{ route('admin.users.index') }}" icon="shield" :active="request()->routeIs('admin.users.*')">Pengguna & Akaun</x-dropdown-item>
+                                    @endcan
                                     <x-dropdown-item href="#" icon="bell">Announcement</x-dropdown-item>
                                     <x-dropdown-item href="#" icon="history">Audit Trail</x-dropdown-item>
                                     <x-dropdown-item href="#" icon="book">Data Dictionary</x-dropdown-item>
@@ -130,12 +135,6 @@
                                     </x-dropdown>
                                     <x-dropdown-item href="#" icon="adjustments">System Setting</x-dropdown-item>
                                     <x-dropdown-item href="#" icon="trash">Trash Bin</x-dropdown-item>
-                                    {{-- Policy-driven navigation: only rendered for
-                                         users the UserPolicy lets into the admin
-                                         area at all. --}}
-                                    @can('viewAny', App\Models\User::class)
-                                        <x-dropdown-item href="{{ route('admin.users.index') }}" icon="user" :active="request()->routeIs('admin.users.*')">Users</x-dropdown-item>
-                                    @endcan
                                 </x-dropdown>
                                 <li class="nav-item">
                                     <a class="nav-link" href="#">
