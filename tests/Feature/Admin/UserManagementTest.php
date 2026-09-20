@@ -73,26 +73,6 @@ class UserManagementTest extends TestCase
         $this->assertStringNotContainsString('aria-label="Padam '.$admin->name.'"', $html);
     }
 
-    public function test_an_editor_can_look_but_gets_no_delete_controls(): void
-    {
-        $editor = $this->userWithRole('editor');
-        $other = User::factory()->create();
-
-        $response = $this->actingAs($editor)->get('/admin/users');
-
-        $response->assertOk();
-
-        $html = $response->getContent();
-        $this->assertIsString($html);
-
-        // An editor may browse, but neither delete nor edit.
-        $this->assertStringNotContainsString('aria-label="Padam '.$other->name.'"', $html);
-        $this->assertStringNotContainsString('aria-label="Sunting '.$other->name.'"', $html);
-        // Viewing is allowed, so this is what proves the assertions above are
-        // looking at something real rather than an empty page.
-        $this->assertStringContainsString('aria-label="Lihat '.$other->name.'"', $html);
-    }
-
     public function test_a_user_without_permission_is_forbidden(): void
     {
         $plain = User::factory()->create();
@@ -117,12 +97,12 @@ class UserManagementTest extends TestCase
         $this->assertSoftDeleted('users', ['id' => $victim->id]);
     }
 
-    public function test_an_editor_cannot_delete(): void
+    public function test_a_user_without_permission_cannot_delete(): void
     {
-        $editor = $this->userWithRole('editor');
+        $plain = User::factory()->create();
         $victim = User::factory()->create();
 
-        $this->actingAs($editor)
+        $this->actingAs($plain)
             ->delete(route('admin.users.destroy', $victim))
             ->assertForbidden();
 
@@ -254,6 +234,6 @@ class UserManagementTest extends TestCase
 
         $this->assertStringContainsString($url, $adminHtml);
         $this->assertStringNotContainsString($url, $plainHtml);
-        $this->assertStringContainsString('Pengguna & Akaun', $adminHtml);
+        $this->assertStringContainsString('Pengguna', $adminHtml);
     }
 }

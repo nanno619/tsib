@@ -5,6 +5,7 @@ namespace Tests\Feature\Admin;
 use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class UserFilterTest extends TestCase
@@ -77,28 +78,32 @@ class UserFilterTest extends TestCase
 
     public function test_it_filters_by_role(): void
     {
-        $editor = User::factory()->create(['name' => 'Ed Editor']);
-        $editor->assignRole('editor');
+        Role::findOrCreate('teacher');
+
+        $teacher = User::factory()->create(['name' => 'Ted Teacher']);
+        $teacher->assignRole('teacher');
         User::factory()->create(['name' => 'Norm Nobody']);
 
-        $this->actingAs($this->admin())->get('/admin/users?roles[]=editor')
+        $this->actingAs($this->admin())->get('/admin/users?roles[]=teacher')
             ->assertOk()
-            ->assertSee('Ed Editor')
+            ->assertSee('Ted Teacher')
             ->assertDontSee('Norm Nobody');
     }
 
     public function test_several_roles_match_any_of_them(): void
     {
-        $editor = User::factory()->create(['name' => 'Ed Editor']);
-        $editor->assignRole('editor');
+        Role::findOrCreate('teacher');
+
+        $teacher = User::factory()->create(['name' => 'Ted Teacher']);
+        $teacher->assignRole('teacher');
         $other = User::factory()->create(['name' => 'Addy Admin']);
         $other->assignRole('admin');
         User::factory()->create(['name' => 'Norm Nobody']);
 
         $this->actingAs($this->admin())
-            ->get('/admin/users?roles[]=editor&roles[]=admin')
+            ->get('/admin/users?roles[]=teacher&roles[]=admin')
             ->assertOk()
-            ->assertSee('Ed Editor')
+            ->assertSee('Ted Teacher')
             ->assertSee('Addy Admin')
             ->assertDontSee('Norm Nobody');
     }

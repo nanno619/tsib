@@ -5,6 +5,7 @@ namespace Tests\Feature\Admin;
 use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class UserEditingTest extends TestCase
@@ -71,13 +72,12 @@ class UserEditingTest extends TestCase
         $response->assertSee('Sunting pengguna');
     }
 
-    public function test_an_editor_cannot_open_the_edit_form(): void
+    public function test_a_user_without_permission_cannot_open_the_edit_form(): void
     {
-        // Editors hold "view admin panel" but not "manage users".
-        $editor = $this->userWithRole('editor');
+        $plain = User::factory()->create();
         $target = User::factory()->create();
 
-        $this->actingAs($editor)->get(route('admin.users.edit', $target))->assertForbidden();
+        $this->actingAs($plain)->get(route('admin.users.edit', $target))->assertForbidden();
     }
 
     public function test_the_edit_form_offers_the_roles_field_for_other_users(): void
@@ -152,6 +152,8 @@ class UserEditingTest extends TestCase
 
     public function test_an_admin_can_change_another_users_roles(): void
     {
+        Role::findOrCreate('teacher');
+
         $admin = $this->userWithRole('admin');
         $target = User::factory()->create();
 
@@ -159,21 +161,23 @@ class UserEditingTest extends TestCase
             ->put(route('admin.users.update', $target), [
                 'name' => $target->name,
                 'email' => $target->email,
-                'roles' => ['editor'],
+                'roles' => ['teacher'],
             ])
             ->assertSessionHasNoErrors();
 
-        $this->assertSame(['editor'], $target->refresh()->getRoleNames()->all());
+        $this->assertSame(['teacher'], $target->refresh()->getRoleNames()->all());
     }
 
     public function test_an_admin_cannot_change_their_own_roles(): void
     {
+        Role::findOrCreate('teacher');
+
         $admin = $this->userWithRole('admin');
 
         $this->actingAs($admin)->put(route('admin.users.update', $admin), [
             'name' => 'Still Me',
             'email' => $admin->email,
-            'roles' => ['editor'],
+            'roles' => ['teacher'],
         ]);
 
         // Name still saves; the roles field is ignored rather than honoured.
@@ -200,12 +204,12 @@ class UserEditingTest extends TestCase
         $this->assertDatabaseMissing('roles', ['name' => 'superuser']);
     }
 
-    public function test_a_non_admin_cannot_update(): void
+    public function test_a_user_without_permission_cannot_update(): void
     {
-        $editor = $this->userWithRole('editor');
+        $plain = User::factory()->create();
         $target = User::factory()->create(['name' => 'Untouchable']);
 
-        $this->actingAs($editor)
+        $this->actingAs($plain)
             ->put(route('admin.users.update', $target), ['name' => 'Changed', 'email' => $target->email])
             ->assertForbidden();
 

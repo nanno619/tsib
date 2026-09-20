@@ -10,11 +10,10 @@ use Spatie\Permission\Models\Role;
 /**
  * The three fixed KMS roles (principal/admin/teacher) plus the two
  * permissions from App\Enums\PermissionName — safe to run in production,
- * unlike RolePermissionSeeder (which is demo-only and also creates an
- * 'editor' role used purely by the starter-kit's own tests).
+ * unlike RolePermissionSeeder (which is demo-only).
  *
- * Only 'admin' gets ViewAdminPanel/ManageUsers: Pengguna & Akaun is
- * admin-only per 03-app-flow.md.
+ * Only 'admin' gets ViewAdminPanel/ManageUsers: Pengguna is admin-only per
+ * 03-app-flow.md.
  */
 class RoleSeeder extends Seeder
 {

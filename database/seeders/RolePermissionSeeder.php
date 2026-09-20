@@ -11,8 +11,8 @@ use Spatie\Permission\Models\Role;
 class RolePermissionSeeder extends Seeder
 {
     /**
-     * Seed a starter set of roles/permissions and assign 'admin' to the
-     * demo user (test@example.com) created by UserSeeder.
+     * Seed the starter permissions and assign 'admin' to the demo user
+     * (test@example.com) created by UserSeeder.
      *
      * Permission names come from App\Enums\PermissionName, which the policies
      * also read — a rename on one side only would otherwise leave every policy
@@ -25,9 +25,6 @@ class RolePermissionSeeder extends Seeder
 
         $admin = Role::findOrCreate('admin');
         $admin->syncPermissions([$viewAdminPanel, $manageUsers]);
-
-        $editor = Role::findOrCreate('editor');
-        $editor->syncPermissions([$viewAdminPanel]);
 
         User::where('email', 'test@example.com')->first()?->assignRole($admin);
     }

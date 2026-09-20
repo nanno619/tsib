@@ -31,14 +31,6 @@ class UserPolicyTest extends TestCase
         $this->assertTrue($this->userWithRole('admin')->can('viewAny', User::class));
     }
 
-    public function test_an_editor_may_browse_users(): void
-    {
-        $this->seed(RolePermissionSeeder::class);
-
-        // The editor role carries "view admin panel" but not "manage users".
-        $this->assertTrue($this->userWithRole('editor')->can('viewAny', User::class));
-    }
-
     public function test_a_user_without_a_role_may_not_browse_users(): void
     {
         $this->seed(RolePermissionSeeder::class);
@@ -63,7 +55,7 @@ class UserPolicyTest extends TestCase
         $other = User::factory()->create();
 
         $this->assertFalse($plain->can('view', $other));
-        $this->assertTrue($this->userWithRole('editor')->can('view', $other));
+        $this->assertTrue($this->userWithRole('admin')->can('view', $other));
     }
 
     public function test_only_manage_users_may_delete(): void
@@ -74,8 +66,6 @@ class UserPolicyTest extends TestCase
 
         $this->assertTrue($this->userWithRole('admin')->can('delete', $victim));
 
-        // An editor can look but not act.
-        $this->assertFalse($this->userWithRole('editor')->can('delete', $victim));
         $this->assertFalse(User::factory()->create()->can('delete', $victim));
     }
 

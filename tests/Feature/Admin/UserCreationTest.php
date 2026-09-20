@@ -6,6 +6,7 @@ use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class UserCreationTest extends TestCase
@@ -67,33 +68,14 @@ class UserCreationTest extends TestCase
             ->assertDontSee('Page not found');
     }
 
-    public function test_an_editor_cannot_create(): void
+    public function test_a_user_without_permission_cannot_create(): void
     {
-        // Editors hold "view admin panel" but not "manage users".
-        $this->actingAs($this->userWithRole('editor'))
-            ->get('/admin/users/create')
-            ->assertForbidden();
+        $plain = User::factory()->create();
 
-        $this->actingAs($this->userWithRole('editor'))
-            ->post('/admin/users', $this->validPayload())
-            ->assertForbidden();
+        $this->actingAs($plain)->get('/admin/users/create')->assertForbidden();
+        $this->actingAs($plain)->post('/admin/users', $this->validPayload())->assertForbidden();
 
         $this->assertDatabaseMissing('users', ['email' => 'new.person@example.com']);
-    }
-
-    public function test_the_add_user_button_follows_the_policy(): void
-    {
-        $admin = $this->userWithRole('admin');
-        $editor = $this->userWithRole('editor');
-
-        $adminHtml = $this->actingAs($admin)->get('/admin/users')->getContent();
-        $editorHtml = $this->actingAs($editor)->get('/admin/users')->getContent();
-
-        $this->assertIsString($adminHtml);
-        $this->assertIsString($editorHtml);
-
-        $this->assertStringContainsString(route('admin.users.create'), $adminHtml);
-        $this->assertStringNotContainsString(route('admin.users.create'), $editorHtml);
     }
 
     // --------------------------------------------------------------- create
@@ -130,13 +112,15 @@ class UserCreationTest extends TestCase
 
     public function test_roles_can_be_assigned_on_creation(): void
     {
+        Role::findOrCreate('teacher');
+
         $this->actingAs($this->userWithRole('admin'))
-            ->post('/admin/users', $this->validPayload(['roles' => ['editor']]))
+            ->post('/admin/users', $this->validPayload(['roles' => ['teacher']]))
             ->assertSessionHasNoErrors();
 
         $user = User::where('email', 'new.person@example.com')->firstOrFail();
 
-        $this->assertSame(['editor'], $user->getRoleNames()->all());
+        $this->assertSame(['teacher'], $user->getRoleNames()->all());
     }
 
     public function test_a_user_can_be_created_without_any_roles(): void

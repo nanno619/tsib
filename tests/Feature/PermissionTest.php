@@ -15,12 +15,11 @@ class PermissionTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_the_seeder_creates_the_starter_roles_and_permissions(): void
+    public function test_the_seeder_creates_the_admin_role_and_permissions(): void
     {
         $this->seed(RolePermissionSeeder::class);
 
         $this->assertTrue(Role::where('name', 'admin')->exists());
-        $this->assertTrue(Role::where('name', 'editor')->exists());
         $this->assertTrue(Permission::where('name', 'view admin panel')->exists());
         $this->assertTrue(Permission::where('name', 'manage users')->exists());
     }
@@ -30,7 +29,7 @@ class PermissionTest extends TestCase
         $this->seed(RolePermissionSeeder::class);
         $this->seed(RolePermissionSeeder::class);
 
-        $this->assertSame(2, Role::count());
+        $this->assertSame(1, Role::count());
         $this->assertSame(2, Permission::count());
     }
 
@@ -50,17 +49,10 @@ class PermissionTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole('admin');
 
-        $editor = User::factory()->create();
-        $editor->assignRole('editor');
-
         $plain = User::factory()->create();
 
         $this->assertTrue($admin->can('manage users'));
         $this->assertTrue($admin->can('view admin panel'));
-
-        // The editor role only carries the panel permission.
-        $this->assertTrue($editor->can('view admin panel'));
-        $this->assertFalse($editor->can('manage users'));
 
         $this->assertFalse($plain->can('view admin panel'));
         $this->assertFalse($plain->can('manage users'));

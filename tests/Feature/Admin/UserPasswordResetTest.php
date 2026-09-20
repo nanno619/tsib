@@ -55,27 +55,17 @@ class UserPasswordResetTest extends TestCase
         Notification::assertSentTo($target, ResetPassword::class);
     }
 
-    public function test_an_editor_cannot_trigger_a_password_reset(): void
+    public function test_a_plain_user_cannot_trigger_a_password_reset(): void
     {
         Notification::fake();
 
-        $editor = $this->userWithRole('editor');
-        $target = User::factory()->create();
-
-        $this->actingAs($editor)
-            ->post(route('admin.users.reset-password', $target))
-            ->assertForbidden();
-
-        Notification::assertNothingSent();
-    }
-
-    public function test_a_plain_user_cannot_trigger_a_password_reset(): void
-    {
         $plain = User::factory()->create();
         $target = User::factory()->create();
 
         $this->actingAs($plain)
             ->post(route('admin.users.reset-password', $target))
             ->assertForbidden();
+
+        Notification::assertNothingSent();
     }
 }
