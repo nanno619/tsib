@@ -15,6 +15,10 @@ use Spatie\Activitylog\Support\LogOptions;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+/**
+ * @property LeaveApplicationStatus $status Larastan doesn't reliably
+ *                                          resolve enum types declared only in casts() — see .ai/rules/app.md.
+ */
 #[Fillable([
     'staff_id', 'ref_leave_type_id', 'other_type_detail', 'date_from', 'date_to',
     'duration_days', 'reason', 'status', 'return_reason', 'submitted_at',

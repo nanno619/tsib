@@ -16,6 +16,10 @@ use Spatie\Activitylog\Support\LogOptions;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+/**
+ * @property JobApplicationStatus $status Larastan doesn't reliably resolve
+ *                                        enum types declared only in casts() — see .ai/rules/app.md.
+ */
 #[Fillable([
     'applicant_name', 'gender_id', 'date_of_birth', 'race_id', 'religion_id',
     'siblings_count', 'mobile_number', 'education_level_id', 'education_detail',

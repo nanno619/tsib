@@ -16,6 +16,10 @@ use Spatie\Activitylog\Support\LogOptions;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+/**
+ * @property PayslipStatus $status Larastan doesn't reliably resolve enum
+ *                                 types declared only in casts() — see .ai/rules/app.md.
+ */
 #[Fillable([
     'staff_id', 'salary_month', 'salary_date', 'start_date', 'end_date',
     'basic_salary', 'overtime', 'allowances', 'advance', 'epf_staff',

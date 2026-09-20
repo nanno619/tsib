@@ -45,3 +45,19 @@ root.
 Also follow superpowers-laravel: `performance-eager-loading`,
 `performance-select-columns`, `data-chunking-large-datasets`,
 `performance-caching`, `interfaces-and-di`.
+
+## Enum casts need an explicit `@property` docblock
+
+Larastan 3.12 doesn't reliably resolve a property's type from an enum cast
+declared only inside the `casts(): array` method — `$model->status ===
+SomeEnum::Case` gets flagged `identical.alwaysFalse` against `string`, even
+though the cast is correct and the comparison works fine at runtime. Confirmed
+with a minimal repro outside this app's own models, so it's a tool gap, not a
+bug in any specific model.
+
+Fix: add `@property EnumType $column` on the class docblock (immediately above
+`#[Fillable]` is fine — a docblock isn't code, so it doesn't break the
+attribute's binding to the class). Every model with an enum cast needs this:
+`Child.status`, `ChildGuardian.type`, `JobApplication.status`,
+`LeaveApplication.status`, `Payslip.status`, `Setting.web_app_status`. Add the
+same line to any new model that casts a column to an enum.

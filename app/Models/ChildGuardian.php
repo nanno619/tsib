@@ -11,6 +11,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property GuardianType $type Larastan doesn't reliably resolve enum types
+ *                              declared only in casts() — see .ai/rules/app.md.
+ */
 #[Fillable([
     'child_id', 'type', 'full_name', 'ic_number', 'date_of_birth', 'race_id',
     'religion_id', 'nationality_id', 'marital_status_id', 'home_phone',

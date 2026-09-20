@@ -20,6 +20,10 @@ use Spatie\Activitylog\Support\LogOptions;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+/**
+ * @property ChildStatus $status Larastan doesn't reliably resolve enum types
+ *                               declared only in casts() — see .ai/rules/app.md.
+ */
 #[Fillable([
     'full_name', 'ic_number', 'birth_certificate_number', 'date_of_birth',
     'gender_id', 'religion_id', 'race_id', 'nationality_id', 'department_id',
