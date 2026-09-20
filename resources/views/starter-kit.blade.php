@@ -237,6 +237,8 @@
                 <x-select name="demo_select" label="Select" :options="['one' => 'Option one', 'two' => 'Option two']" />
                 <x-checkbox name="demo_checkbox" checked>Checkbox</x-checkbox>
                 <x-checkbox name="demo_switch" switch checked>Switch</x-checkbox>
+                <x-radio name="demo_radio" value="one" checked inline>Radio one</x-radio>
+                <x-radio name="demo_radio" value="two" inline>Radio two</x-radio>
             </x-card>
         </div>
 

@@ -188,6 +188,38 @@ class FormComponentsTest extends TestCase
             ->assertSee('value="yes"', escape: false);
     }
 
+    // ---------------------------------------------------------------- radio
+
+    public function test_radio_renders_a_labelled_input(): void
+    {
+        $this->blade('<x-radio name="status" value="online">Online</x-radio>')
+            ->assertSee('type="radio"', escape: false)
+            ->assertSee('form-check-input', escape: false)
+            ->assertSee('form-check-label', escape: false)
+            ->assertSee('Online');
+    }
+
+    public function test_radio_checked_disabled_and_value(): void
+    {
+        $this->blade('<x-radio name="status" value="offline" checked disabled>Offline</x-radio>')
+            ->assertSee('checked', escape: false)
+            ->assertSee('disabled', escape: false)
+            ->assertSee('value="offline"', escape: false);
+    }
+
+    public function test_a_radio_group_shares_one_name_with_different_values(): void
+    {
+        $html = $this->blade(
+            '<x-radio name="status" value="online" checked>Online</x-radio>'
+            .'<x-radio name="status" value="under_maintenance">Under Maintenance</x-radio>',
+        );
+
+        $html->assertSeeInOrder([
+            'name="status"', 'value="online"', 'checked',
+            'name="status"', 'value="under_maintenance"',
+        ], escape: false);
+    }
+
     // --------------------------------------------------------------- button
 
     public function test_a_button_defaults_to_type_button(): void

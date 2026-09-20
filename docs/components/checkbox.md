@@ -42,7 +42,7 @@ The slot is the label text.
 
 ## What this doesn't wrap
 
-- **Radio buttons / radio groups** — a radio group needs a shared `name` across multiple inputs with different `value`s and a single "currently selected" concept, which doesn't fit this single-checkbox component. Write `<label class="form-check"><input type="radio" ...>` directly, per [Tabler's docs](https://docs.tabler.io/ui/components/form-elements#radios).
+- **Radio buttons / radio groups** — use [`<x-radio>`](./radio.md), a sibling component with a shared `name` across multiple inputs and a single "currently selected" concept, which doesn't fit this single-checkbox component.
 
 ## See it live
 
