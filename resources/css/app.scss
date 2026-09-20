@@ -1,0 +1,129 @@
+// Tabler core, compiled from source so its Sass variables (not just the
+// runtime `data-bs-*` custom properties) can be overridden here.
+// The accent color, base palette and corner radius are still switched at
+// runtime via the `data-bs-theme-*` attributes on <html> — see
+// resources/views/components/layouts/app.blade.php — so only the one
+// setting that can't be done that way (the font stack) is configured here.
+@use '@tabler/core/scss/tabler' with (
+    $font-family-sans-serif: (
+        'Inter',
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        'San Francisco',
+        'Segoe UI',
+        Roboto,
+        'Helvetica Neue',
+        sans-serif
+    )
+);
+
+// Alternative gray palettes for data-bs-theme-base, and the data-bs-theme-*
+// runtime color/radius/font switcher. Reuses the @use above, already
+// configured — see the Sass module notes in docs/components/README.md.
+@use '@tabler/core/scss/tabler-themes';
+
+// Tabler's own theming for bundled third-party plugins (FullCalendar, Tom
+// Select, Litepicker, ApexCharts, Dropzone, ...) — sets each library's own
+// --fc-*/--ts-*/etc. custom properties to Tabler's colors and polishes a
+// handful of selectors with !important where the plugin's own CSS would
+// otherwise win at equal specificity. This is what makes <x-calendar> (see
+// docs/components/calendar.md) pick up Tabler's colors instead of
+// FullCalendar's generic defaults. It also documents (and partly overlaps
+// with) the transparent-dropdown fix below — see that fix's comment and
+// Tabler upstream issue #2600.
+@use '@tabler/core/scss/tabler-vendors';
+
+// Project-specific overrides.
+.card {
+    // Tabler declares `border: <width> solid var(--tblr-card-border-color)`,
+    // so setting the variable is the supported hook — a raw `border-color`
+    // would need !important to beat the shorthand, and would miss anywhere
+    // else the variable is read.
+    --tblr-card-border-color: #9e9e9e;
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+    transition: box-shadow 0.3s ease;
+}
+
+// The fixed grey above only suits light mode — against a dark card it reads as
+// a bright outline, since it can't adapt the way Tabler's translucent default
+// does. Scoped by matching *dark* rather than light on purpose: light is the
+// default state and carries no attribute (there are no [data-bs-theme=light]
+// selectors in Tabler's CSS), and the theme script actually *removes* the
+// attribute when Auto flips back to light — so a light selector would miss.
+[data-bs-theme='dark'] .card {
+    --tblr-card-border-color: var(--tblr-border-color-translucent);
+}
+
+// Tom Select's bootstrap5 theme (resources/js/select.js, <x-select advanced>)
+// is written against plain Bootstrap 5 custom properties (--bs-*), but
+// Tabler's own build only defines its --tblr-* equivalents — it never
+// defines --bs-* at all. The @use above (tabler-vendors, via its
+// vendor/_tom-select partial) already !important-overrides .ts-dropdown's
+// background/color directly — Tabler's own documented fix for this exact
+// bug, upstream issue #2600 — but that partial doesn't cover every --bs-*
+// reference in Tom Select's stylesheet (e.g. .ts-control's border/
+// border-radius). Bridge the rest as a safety net so nothing Tom Select
+// references is ever silently undefined.
+:root {
+    --bs-body-bg: var(--tblr-bg-surface);
+    --bs-body-color: var(--tblr-body-color);
+    --bs-border-color: var(--tblr-border-color);
+    --bs-border-color-translucent: var(--tblr-border-color-translucent);
+    --bs-border-radius: var(--tblr-border-radius);
+    --bs-border-radius-lg: var(--tblr-border-radius-lg);
+    --bs-border-radius-sm: var(--tblr-border-radius-sm);
+    --bs-border-width: var(--tblr-border-width);
+    --bs-secondary-bg: var(--tblr-secondary-bg);
+    --bs-secondary-color: var(--tblr-secondary-color);
+    --bs-tertiary-bg: var(--tblr-tertiary-bg);
+    --bs-form-invalid-color: var(--tblr-danger);
+    --bs-form-valid-color: var(--tblr-success);
+    --bs-box-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+}
+
+// resources/js/select.js's render function wraps every option in Tabler's
+// own .dropdown-item class (to match Tabler's dropdown look) — the same
+// pattern Tabler's own raw demo uses. That class resolves its text color via
+// --tblr-dropdown-link-color, a custom property only ever defined on
+// .dropdown-menu; Tabler's vendor/_tom-select partial above fixes
+// .ts-dropdown's own color, but a child .dropdown-item still has its own
+// more-specific (non-inherited) color declaration, which wins over the
+// parent's !important — so the fix above doesn't reach it. Set it here
+// explicitly so option text stays legible in both light and dark mode.
+.ts-dropdown .dropdown-item {
+    color: var(--tblr-body-color);
+}
+
+// Bare icon actions in table rows — see resources/views/admin/users/index.blade.php.
+// Deliberately not .btn: these are inline glyphs, so they get a colour and a
+// hover state and nothing else. Colour comes from Tabler's theme-aware tokens,
+// so they adapt to light/dark like everything else.
+.action-icon {
+    display: inline-flex;
+    align-items: center;
+    color: var(--tblr-secondary);
+    transition: color 0.15s ease;
+
+    // Delete has to be a real submit button (it carries the CSRF token and
+    // @method('DELETE')), so strip the browser's default button chrome to make
+    // it match the links beside it.
+    &:is(button) {
+        border: 0;
+        background: none;
+        padding: 0;
+    }
+
+    &:hover,
+    &:focus-visible {
+        color: var(--tblr-body-color);
+    }
+}
+
+// Destructive actions read as destructive on hover — the one place in a row
+// where a colour cue is worth the inconsistency.
+.action-icon-danger:hover,
+.action-icon-danger:focus-visible {
+    color: var(--tblr-danger);
+}

@@ -1,0 +1,21 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+        - database
+        - routes
+        - tests
+
+    # Level 8 is where null-safety is enforced — the check that catches
+    # "this can be null" bugs, which is the main reason to run PHPStan at all.
+    # The codebase is clean here with nothing suppressed.
+    #
+    # Level 9 is not reachable without either editing or excluding the
+    # published spatie/laravel-permission migration, which reads its config via
+    # `mixed`. Leave it alone: republishing would discard the edits.
+    #
+    # If this becomes too noisy, lower the level rather than deleting the job —
+    # level 5 is Larastan's recommended starting point.
+    level: 8
