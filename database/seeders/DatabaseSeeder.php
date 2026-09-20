@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Setting;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -12,15 +13,19 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      *
-     * `ReferenceDataSeeder` (the KMS `ref_*` lookup tables) is the only
-     * seeder safe to run in production — everything else below it creates
-     * demo accounts/records (including a `password`-password superadmin) and
-     * is skipped outside local/testing.
+     * `ReferenceDataSeeder` (the KMS `ref_*` lookup tables), `RoleSeeder`
+     * and the Setting row below are the only things safe to run in
+     * production — everything else below that is skipped outside
+     * local/testing since it creates demo accounts/records (including a
+     * `password`-password superadmin).
      */
     public function run(): void
     {
         $this->call(ReferenceDataSeeder::class);
         $this->call(RoleSeeder::class);
+        // Ensures the singleton settings row exists deterministically,
+        // rather than relying on CheckMaintenanceMode's lazy fallback.
+        Setting::current();
 
         if (app()->isProduction()) {
             return;

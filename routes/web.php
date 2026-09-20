@@ -1,16 +1,21 @@
 <?php
 
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SystemSettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ExportUsersPdfController;
 use App\Http\Controllers\Settings\UpdateAvatarController;
+use App\Http\Middleware\CheckMaintenanceMode;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Spatie\Activitylog\Models\Activity;
 
 Route::redirect('/', '/dashboard');
 
-Route::middleware('auth')->group(function () {
+// CheckMaintenanceMode lives on this group only, not globally: a guest
+// hitting anything unauthenticated is redirected to /login regardless of
+// maintenance status, so an admin can never be locked out of login itself.
+Route::middleware(['auth', CheckMaintenanceMode::class])->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 
     Route::view('/settings/profile', 'settings.profile')->name('settings.profile');
@@ -55,4 +60,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/admin/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
     Route::delete('/admin/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
     Route::post('/admin/users/{user}/reset-password', [UserController::class, 'sendPasswordReset'])->name('admin.users.reset-password');
+
+    Route::get('/admin/system-setting', [SystemSettingController::class, 'edit'])->name('admin.system-setting.edit');
+    Route::put('/admin/system-setting/general', [SystemSettingController::class, 'updateGeneral'])->name('admin.system-setting.update-general');
+    Route::put('/admin/system-setting/email', [SystemSettingController::class, 'updateEmail'])->name('admin.system-setting.update-email');
 });

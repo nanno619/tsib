@@ -57,7 +57,7 @@
     </div>
 </header>
 
-{{-- Primary navigation row: Dashboard / Administrations / Starter Kit --}}
+{{-- Primary navigation row: Dashboard / Pentadbiran / Starter Kit --}}
 <div class="navbar-expand-md">
     <div class="collapse navbar-collapse" id="navbar-menu">
         <div class="navbar">
@@ -101,7 +101,7 @@
                                     <x-dropdown-item href="#" icon="currency-dollar">Payslip</x-dropdown-item>
                                     <x-dropdown-item href="#" icon="clock">Schedule</x-dropdown-item>
                                 </x-dropdown>
-                                <x-dropdown as="li" trigger-class="nav-link" auto-close="outside" class="nav-item {{ request()->routeIs('admin.roles.*') || request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                                <x-dropdown as="li" trigger-class="nav-link" auto-close="outside" class="nav-item {{ request()->routeIs('admin.roles.*') || request()->routeIs('admin.users.*') || request()->routeIs('admin.system-setting.*') ? 'active' : '' }}">
                                     <x-slot:trigger>
                                         <span class="nav-link-icon"><x-icon name="settings" /></span>
                                         <span class="nav-link-title">Pentadbiran</span>
@@ -135,7 +135,9 @@
                                         <x-dropdown-item href="#">Notifications</x-dropdown-item>
                                         <x-dropdown-item href="#">Appearance</x-dropdown-item>
                                     </x-dropdown>
-                                    <x-dropdown-item href="#" icon="adjustments">System Setting</x-dropdown-item>
+                                    @can('view', App\Models\Setting::class)
+                                        <x-dropdown-item href="{{ route('admin.system-setting.edit') }}" icon="adjustments" :active="request()->routeIs('admin.system-setting.*')">System Setting</x-dropdown-item>
+                                    @endcan
                                     <x-dropdown-item href="#" icon="trash">Trash Bin</x-dropdown-item>
                                 </x-dropdown>
                                 <li class="nav-item">

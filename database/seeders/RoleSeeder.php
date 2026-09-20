@@ -8,12 +8,12 @@ use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 /**
- * The three fixed KMS roles (principal/admin/teacher) plus the two
- * permissions from App\Enums\PermissionName — safe to run in production,
- * unlike RolePermissionSeeder (which is demo-only).
+ * The three fixed KMS roles (principal/admin/teacher) plus the permissions
+ * from App\Enums\PermissionName — safe to run in production, unlike
+ * RolePermissionSeeder (which is demo-only).
  *
- * Only 'admin' gets ViewAdminPanel/ManageUsers: Pengguna is admin-only per
- * 03-app-flow.md.
+ * Only 'admin' gets these permissions: Pengguna, Access Control and System
+ * Setting are all admin-only per 03-app-flow.md.
  */
 class RoleSeeder extends Seeder
 {
@@ -21,11 +21,12 @@ class RoleSeeder extends Seeder
     {
         $viewAdminPanel = Permission::findOrCreate(PermissionName::ViewAdminPanel->value);
         $manageUsers = Permission::findOrCreate(PermissionName::ManageUsers->value);
+        $manageSettings = Permission::findOrCreate(PermissionName::ManageSettings->value);
 
         foreach (['principal', 'admin', 'teacher'] as $name) {
             Role::findOrCreate($name);
         }
 
-        Role::findOrCreate('admin')->syncPermissions([$viewAdminPanel, $manageUsers]);
+        Role::findOrCreate('admin')->syncPermissions([$viewAdminPanel, $manageUsers, $manageSettings]);
     }
 }

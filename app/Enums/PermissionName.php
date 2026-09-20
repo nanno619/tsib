@@ -15,4 +15,5 @@ enum PermissionName: string
 {
     case ViewAdminPanel = 'view admin panel';
     case ManageUsers = 'manage users';
+    case ManageSettings = 'manage settings';
 }
